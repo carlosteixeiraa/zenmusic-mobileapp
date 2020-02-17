@@ -1,0 +1,21 @@
+{
+  "short_name": "zenmusic",
+  "name": "zenmusic",
+  "icons": [
+    {
+      "src": "/media/icon_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/media/icon_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/browse",
+  "background_color": "#312F2F",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#312F2F"
+}
