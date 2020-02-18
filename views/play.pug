@@ -1,0 +1,113 @@
+.player
+   audio(id="play")
+      source(src='#', id="aud")
+   .p-left
+       img(src="media/playbutton.svg", id="playbtn")
+       p Nothing playing
+   .p-right
+     img(src="media/others.svg")
+script(src="js/init_sw.js")
+script(src="js/jquery.min.js")
+script.
+   var value = 0;
+   $(document).ready(() => {
+     $('#playbtn').click(() => {
+       if(value == 0) {
+           value = 1;
+           $("#playbtn").attr('src', 'media/playbutton.svg')
+           $('#play')[0].pause();
+       } else {
+           value = 0;
+           $("#playbtn").attr('src', 'media/stopbutton.svg')
+           $('#play')[0].play();
+       }
+     });
+   });
+
+   $('#homeBtn').click(() => {
+     $('.homeWhole').css('display', 'block');
+     $('.genresWhole').css('display', 'none');
+     $('.browseWhole').css('display', 'none');
+     $('.playerWhole').css('display', 'none');
+   });
+
+   $('#genresBtn').click(() => {
+     $('.homeWhole').css('display', 'none');
+     $('.genresWhole').css('display', 'block');
+     $('.browseWhole').css('display', 'none');
+     $('.playerWhole').css('display', 'none');
+   });
+
+   $('#browseBtn').click(() => {
+     $('.homeWhole').css('display', 'none');
+     $('.genresWhole').css('display', 'none');
+     $('.browseWhole').css('display', 'block');
+     $('.playerWhole').css('display', 'none');
+   });
+
+   $('#playerWhole').click(() => {
+     $('.homeWhole').css('display', 'none');
+     $('.genresWhole').css('display', 'none');
+     $('.browseWhole').css('display', 'none');
+     $('.playerWhole').css('display', 'block');
+   });
+   
+   $(document).ready(function() {
+      $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+          event.preventDefault();
+          doSearch();
+          return false;
+        }
+      });
+    });
+    
+   var musics = [];
+
+   function doSearch() {
+     var searchValue = $('#search').val();
+     //console.log(searchValue);
+     $('.nothing').css('display', 'none');
+     $('.musics').css('display', 'none');
+     $('.nt-wrapper').empty();
+     $('.nt-wrapper').css('display', 'flex');
+     var loadingSvg = '<img src=\"media/loading.svg\">'
+     $(loadingSvg).appendTo('.nt-wrapper');
+     $.getJSON("http://192.168.1.11:18732/music/search/" + searchValue, (data) => {
+       $('.nt-wrapper').css('display', 'none');
+       $('.musics').empty();
+       $('.musics').css('display', 'block');
+       musics = [];
+       $.each(data, (key, val) => {
+         //console.log(val);
+         var fieldToAdd = "<div onclick=\"playNow(" + key + ")\" class=\"music\"><div class=\"hidden\">" + val.id + "</div><div class=\"m-left\"><img src=\"" + val.thumb + "\"" +"></div><div class=\"m-right\"><p>" + val.title + "</p></div></div>"
+         //console.log(fieldToAdd);
+         $(fieldToAdd).appendTo('.musics');
+         musics.push(val);
+       });
+      
+     });   
+   }
+
+    function playNow(key) {
+    
+      $('#aud').attr('src',"https://crossorigin.me/" + musics[key].streaming_live);
+      //console.log(musics[key].streaming_live);
+      $('.p-left p').text(musics[key].title)
+      $("#playbtn").attr('src', 'media/stopbutton.svg')
+      value = 0;
+      $('#play')[0].play();
+      console.log($('#play')[0].play())
+        
+
+
+    }
+   
+
+
+
+   if('serviceWorker' in navigator) {
+     window.addEventListener('load', () => {
+       navigator.serviceWorker.register('service-worker.js')
+     });
+   }

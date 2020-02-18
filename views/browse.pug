@@ -1,79 +1,21 @@
-html
-  head
-    title zenmusic
-    link(rel="stylesheet", type="text/css", href="css/style.css")
-    link(rel="manifest", href="/manifest.json")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
-  body
-    header
-      .h-left
-        img(src="media/menu.svg")
-      .h-middle
-        h3 BROWSE
-      .h-right
-        img(src="media/info.svg")
-    .searchBar
-      .sb-left
-        img(src="media/search.svg")
-      .sb-right
-        form(method="GET", action="/browse")
-          input(type="text", autocomplete="off", name="q", placeholder="Search by artists or music names" , value=query)
-    if(musics)
-      .musics
-         each music in musics
-           a(href="/browse" + "?q=" + query + "&m=" + music.id + "&t=" + music.title)  
-             .music
-               .hidden=music.id
-               .m-left
-                 img(src=music.thumb)
-               .m-right
-                 p= music.title
-    else
-      .nt-wrapper
-       .nothing
-         .bt
-          h4 Don’t know what to listen?
-          p Check zenmusic’s playlists choices!
-         p(class="playlists") PLAYLISTS
-    .player
-      audio(id="play" autoplay)
-        if(playermusicid)
-         source(src='https://zenmusic-streamingapi.herokuapp.com/' + playermusicid , id="aud")
-        else
-         source(src='#', id="aud")
-      .p-left
-        if(playing == true)
-          img(src="media/stopbutton.svg", id="playbtn")
-        else 
-          img(src="media/playbutton.svg", id="playbtn")
-        if playermusictitle
-         p= playermusictitle
-        else
-         p Nothing playing
-      .p-right
-        img(src="media/others.svg")
-    script(src="js/init_sw.js")    
-    script(src="js/jquery.min.js")    
-    script.
-      $(document).ready(() => {
-        var value = 0;
-        $('#playbtn').click(() => {
-          if(value == 0) {
-              value = 1;
-              $("#playbtn").attr('src', 'media/playbutton.svg')
-              $('#play')[0].pause();
-          } else {
-              value = 0;
-              $("#playbtn").attr('src', 'media/stopbutton.svg')
-              $('#play')[0].play();
-          }
-        });
-      });
-      
-      if('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('service-worker.js')
-        });
-      }
-        
-  
+header
+  .h-left
+    img(src="media/menu.svg")
+  .h-middle
+    h3 BROWSE
+  .h-right
+    img(src="media/info.svg")
+.searchBar
+  .sb-left
+    img(src="media/search.svg")
+  .sb-right
+    form(method="GET")
+      input(type="text", method="", action="", autocomplete="off", id="search", placeholder="Search by artists or music names" , value=query)
+.musics
+    p &nbsp
+.nt-wrapper
+   .nothing
+     .bt
+      h4 Don’t know what to listen?
+      p Check zenmusic’s playlists choices!
+     p(class="playlists") PLAYLISTS

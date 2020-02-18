@@ -1,0 +1,19 @@
+html
+  head
+    title zenmusic
+    link(rel="stylesheet", type="text/css", href="css/style.css")
+    link(rel="manifest", href="/manifest.json")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+  body
+   if !browse
+    .homeWhole
+      include home.pug
+    .genresWhole
+      include genres.pug
+    .browseWhole
+      include browse.pug
+    .playerWhole
+      include player.pug
+   else
+      include browse.pug
+   include play.pug

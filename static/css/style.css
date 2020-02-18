@@ -140,6 +140,7 @@ header img {
 }
 
 .music {
+  cursor: pointer;
   display: grid;
   grid-template-columns: 1fr 5fr;
   font-size: 13px;
@@ -178,11 +179,15 @@ header img {
   align-content: center;
   margin-left: 15px;
   height: 60px;
+  text-overflow: ellipsis;
 }
 
 .p-left p {
   font-size: 13px;
+  text-overflow: ellipsis;
   margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   padding: 0px 0px 5px 0px;
 }
 
@@ -199,5 +204,25 @@ header img {
 }
 
 .hidden {
+  display: none;
+}
+
+.homeWhole {
+  display: block;
+}
+
+.genresWhole {
+  display: none;
+}
+
+.browseWhole {
+  display: none;
+}
+
+.playerWhole {
+  display: none;
+}
+
+.musics {
   display: none;
 }
