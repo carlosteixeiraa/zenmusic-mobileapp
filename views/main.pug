@@ -2,9 +2,11 @@ html
   head
     title zenmusic
     link(rel="stylesheet", type="text/css", href="css/style.css")
+    link(rel="stylesheet", type="text/css", href="css/jquery-ui.css")
     link(rel="manifest", href="/manifest.json")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
   body
+   include menu.pug
    if !browse
     .homeWhole
       include home.pug

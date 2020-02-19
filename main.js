@@ -52,7 +52,7 @@ app.get('/client', (req, res) => {
             playermusictitle: req.query.t,
             playing: true,
             page: req.query.page,
-            browse: true
+            browse: false
           });
 
 });

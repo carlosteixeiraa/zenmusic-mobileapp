@@ -1,15 +1,17 @@
 .player
-   audio(id="play")
-      source(src='#', id="aud")
+   audio(id="play" autoplay)
+      source(src='holder.mp3', id="aud")
    .p-left
        img(src="media/playbutton.svg", id="playbtn")
        p Nothing playing
    .p-right
-     img(src="media/others.svg")
+     img(src="media/loopun.svg", class="loopBtn")
 script(src="js/init_sw.js")
 script(src="js/jquery.min.js")
+script(src="js/jquery-ui.min.js")
 script.
    var value = 0;
+   var loopval = 0;
    $(document).ready(() => {
      $('#playbtn').click(() => {
        if(value == 0) {
@@ -22,6 +24,23 @@ script.
            $('#play')[0].play();
        }
      });
+     
+     $('.loopBtn').click(() => {
+        if(loopval == 0) {
+          loopval = 1;
+          $(".loopBtn").attr('src', 'media/loopus.svg');
+          $("#play").attr('loop', 'loop');
+        } else {
+          loopval = 0;
+          $(".loopBtn").attr('src', 'media/loopun.svg');
+          $("#play").removeAttr('loop');
+        }
+     });
+     
+     $('.menuOpen').click(() => {
+      $('#menuu').toggle("slide", { direction: "left" }, 250);
+     });
+     
    });
 
    $('#homeBtn').click(() => {
@@ -29,6 +48,7 @@ script.
      $('.genresWhole').css('display', 'none');
      $('.browseWhole').css('display', 'none');
      $('.playerWhole').css('display', 'none');
+     $('#menuu').toggle("slide", { direction: "left" }, 250);
    });
 
    $('#genresBtn').click(() => {
@@ -36,6 +56,7 @@ script.
      $('.genresWhole').css('display', 'block');
      $('.browseWhole').css('display', 'none');
      $('.playerWhole').css('display', 'none');
+     $('#menuu').toggle("slide", { direction: "left" }, 250);
    });
 
    $('#browseBtn').click(() => {
@@ -43,13 +64,15 @@ script.
      $('.genresWhole').css('display', 'none');
      $('.browseWhole').css('display', 'block');
      $('.playerWhole').css('display', 'none');
+     $('#menuu').toggle("slide", { direction: "left" }, 250);
    });
 
-   $('#playerWhole').click(() => {
+   $('#playerBtn').click(() => {
      $('.homeWhole').css('display', 'none');
      $('.genresWhole').css('display', 'none');
      $('.browseWhole').css('display', 'none');
      $('.playerWhole').css('display', 'block');
+     $('#menuu').toggle("slide", { direction: "left" }, 250);
    });
    
    $(document).ready(function() {
@@ -66,43 +89,51 @@ script.
 
    function doSearch() {
      var searchValue = $('#search').val();
-     //console.log(searchValue);
-     $('.nothing').css('display', 'none');
-     $('.musics').css('display', 'none');
-     $('.nt-wrapper').empty();
-     $('.nt-wrapper').css('display', 'flex');
-     var loadingSvg = '<img src=\"media/loading.svg\">'
-     $(loadingSvg).appendTo('.nt-wrapper');
-     $.getJSON("http://192.168.1.11:18732/music/search/" + searchValue, (data) => {
-       $('.nt-wrapper').css('display', 'none');
-       $('.musics').empty();
-       $('.musics').css('display', 'block');
-       musics = [];
-       $.each(data, (key, val) => {
-         //console.log(val);
-         var fieldToAdd = "<div onclick=\"playNow(" + key + ")\" class=\"music\"><div class=\"hidden\">" + val.id + "</div><div class=\"m-left\"><img src=\"" + val.thumb + "\"" +"></div><div class=\"m-right\"><p>" + val.title + "</p></div></div>"
-         //console.log(fieldToAdd);
-         $(fieldToAdd).appendTo('.musics');
-         musics.push(val);
-       });
-      
-     });   
+     if(!searchValue) {
+      console.log('gotta search something');
+     } else {
+       //console.log(searchValue);
+       $('.nothing').css('display', 'none');
+       $('.musics').css('display', 'none');
+       $('.nt-wrapper').empty();
+       $('.nt-wrapper').css('display', 'flex');
+       var loadingSvg = '<img src=\"media/loading.svg\">'
+       $(loadingSvg).appendTo('.nt-wrapper');
+       $.getJSON("http://192.168.1.11:18732/music/search/" + searchValue, (data) => {
+         $('.nt-wrapper').css('display', 'none');
+         $('.musics').empty();
+         $('.musics').css('display', 'block');
+         musics = [];
+         $.each(data, (key, val) => {
+           //console.log(val);
+           if(val.title.length > 50) {
+              val.title = val.title.substring(0,50) + "...";         
+           }
+           var fieldToAdd = "<div onclick=\"playNow(" + key + ")\" class=\"music\"><div class=\"hidden\">" + val.id + "</div><div class=\"m-left\"><img src=\"" + val.thumb + "\"" +"></div><div class=\"m-right\"><p>" + val.title + "<br><span>" + val.views + " views</span></p></div></div>"
+           //console.log(fieldToAdd);
+           $(fieldToAdd).appendTo('.musics');
+           musics.push(val);
+         });
+        
+       });   
+     }
    }
+
+
+
 
     function playNow(key) {
     
-      $('#aud').attr('src',"https://crossorigin.me/" + musics[key].streaming_live);
+      $('#aud').attr('src', musics[key].streaming_live);
       //console.log(musics[key].streaming_live);
       $('.p-left p').text(musics[key].title)
       $("#playbtn").attr('src', 'media/stopbutton.svg')
       value = 0;
+      
+      $('#play')[0].load();
       $('#play')[0].play();
-      console.log($('#play')[0].play())
-        
-
 
     }
-   
 
 
 
